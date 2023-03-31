@@ -1,37 +1,40 @@
 -- Game Of Life, in Haskell
 module Gol.Gol (
-	runGol
+    runGol
+
 ) where
-	import Graphics.Gloss
-	import Graphics.Gloss.Interface.IO.Game
+    import Graphics.Gloss
+    import Graphics.Gloss.Interface.IO.Game
+    import Gol.Logic
+    import Data.Bool
+    import Data.Array.IArray
 
-	runGol :: IO ()
-	runGol = playIO  
-			(InWindow
-			"Hello World" 	 -- window title
-			(500, 500) 	 -- window size
-			(10, 10)) 	 -- window position
-		black			 -- background color
-		60				 -- Framerate (idk how this will work lol)
-		(WorldState 0.0)	 -- Initial world
-		render			 -- render the world
-		handleInput
-		step
+    runGol :: IO ()
+    runGol = playIO  
+            (InWindow
+            "Hello World"   -- window title
+            (500, 500)      -- window size
+            (10, 10))       -- window position
+        black               -- background color
+        60                  -- Framerate (idk how this will work lol)
+        (initialGolState (100, 100))     -- Initial world
+        renderBoard         -- render the world
+        handleInput
+        step
 
+    renderBoard :: GolState -> IO Picture
+    renderBoard state = pure $ Pictures $ map renderTile $ assocs $ board state
 
-	data World = WorldState Float
+    renderTile :: ((Int, Int), Bool) -> Picture
+    renderTile ((_, _), False) = Blank      -- TODO: Don't
+    renderTile ((x, y), True) = Translate ((fromIntegral x) * 5.0) ((fromIntegral y) * 5.0) 
+                                $ Color white 
+                                $ Polygon [(0,0), (5,0), (5,5), (0,5), (0,0)]
 
-	render :: World -> IO Picture
-	render (WorldState t)
-		= pure $ Translate (-170) (-20) -- shift the text to the middle of the window
-		$ Scale 0.5 0.5		 -- display it half the original size
-		$ Color white
-		$ Text $ "Hello World " ++ (show t)	 -- text to display
+    -- World step, based on delta t
+    step :: Float -> GolState -> IO GolState
+    step dt state = pure $ golStateStep state
 
-	-- World step, based on delta t
-	step :: Float -> World -> IO World
-	step dt (WorldState t) = pure $ WorldState $ t + dt
-
-	-- Ignore input
-	handleInput :: Event -> World -> IO World
-	handleInput _ w = pure w
+    -- Ignore input
+    handleInput :: Event -> GolState -> IO GolState
+    handleInput _ w = pure w

@@ -10,3 +10,6 @@ How to use (for non-linux):
 - Checkout this project and enter the folder
 - Run `stack run` from the folder
 - Enjoy :)
+
+## Screenshot:
+![Here should be a screenshot](screenshot.png)

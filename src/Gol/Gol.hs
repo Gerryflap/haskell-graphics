@@ -12,7 +12,7 @@ module Gol.Gol (
     runGol :: IO ()
     runGol = playIO  
             (InWindow
-            "Hello World"   -- window title
+            "Het spel des levens"   -- window title
             (500, 500)      -- window size
             (10, 10))       -- window position
         black               -- background color
@@ -23,7 +23,12 @@ module Gol.Gol (
         step
 
     renderBoard :: GolState -> IO Picture
-    renderBoard state = pure $ Pictures $ map renderTile $ assocs $ board state
+    renderBoard state = pure 
+                        $ Translate (-250) (-250)
+                        $ Pictures 
+                        $ map renderTile 
+                        $ assocs 
+                        $ board state
 
     renderTile :: ((Int, Int), Bool) -> Picture
     renderTile ((_, _), False) = Blank      -- TODO: Don't

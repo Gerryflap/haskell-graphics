@@ -9,6 +9,7 @@ module Gol.Logic (
 
 import Data.Array.IArray
 import Data.Bool
+import System.Random
 
 
 data GolState = GolState {
@@ -17,7 +18,13 @@ data GolState = GolState {
 
 -- Initialize board with all True (for now, random gen can come next)
 initialGolState :: (Int, Int) -> GolState
-initialGolState (w, h) = GolState {board = array ((0, 0), (w-1, h-1)) [((x, y), True) | x <- [0..(w-1)], y <- [0..(h-1)] ] }
+initialGolState (w, h) = GolState {board = array ((0, 0), (w-1, h-1)) initVals}
+                        where
+                            indexVals = [(x, y) | x <- [0..(w-1)], y <- [0..(h-1)]]
+                            initVals = zip indexVals $ alives 42
+
+alives :: Int -> [Bool]
+alives seed = map ((==) (0 :: Int)) $ randomRs (0, 10) (mkStdGen seed)
 
 
 golStateStep :: GolState -> GolState

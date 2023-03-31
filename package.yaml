@@ -23,6 +23,7 @@ dependencies:
 - base >= 4.8 && < 5
 - gloss >= 1.13.0.0 && < 1.14.0.0
 - array == 0.5.4.0
+- random == 1.2.1.1
 
 ghc-options:
 - -Wall
